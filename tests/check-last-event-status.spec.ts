@@ -7,7 +7,11 @@ class CheckLastEventStatus {
 
   async perform({groupId}:{ groupId: string}): Promise<string> {
     const event = await this.loadLastRepository.loadLastEvent({groupId})
-    return event === undefined ? 'done' : 'active'
+    if (event === undefined)
+      return 'done'
+
+    const now = new Date()
+    return event.endDate > now ? 'active' : 'inReview'
   }
 }
 
@@ -49,7 +53,7 @@ describe('CheckLastEventStatus', () => {
     reset()
   })
 
-  test('should get last event data', async () => {
+  it('should get last event data', async () => {
     const { sut, loadLastEventRepository } = makeSut()
 
     await sut.perform({ groupId })
@@ -57,7 +61,7 @@ describe('CheckLastEventStatus', () => {
     expect(loadLastEventRepository.callsCount).toEqual(1)
   })
 
-  test('should return status done when group has no events', async () => {
+  it('should return status done when group has no events', async () => {
     const { sut, loadLastEventRepository } = makeSut()
     loadLastEventRepository.output = undefined
 
@@ -66,7 +70,7 @@ describe('CheckLastEventStatus', () => {
     expect(status).toBe('done')
   })
 
-  test('should return status active when now is before event end time', async () => {
+  it('should return status active when now is before event end time', async () => {
     const { sut, loadLastEventRepository } = makeSut()
     loadLastEventRepository.output = {
       endDate: new Date(new Date().getTime() + 1)
@@ -77,4 +81,14 @@ describe('CheckLastEventStatus', () => {
     expect(status).toBe('active')
   })
 
+  it('should return status inReview when now is after event end time', async () => {
+    const { sut, loadLastEventRepository } = makeSut()
+    loadLastEventRepository.output = {
+      endDate: new Date(new Date().getTime() - 1)
+    }
+
+    const status = await sut.perform({ groupId })
+
+    expect(status).toBe('inReview')
+  })
 })
