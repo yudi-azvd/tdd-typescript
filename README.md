@@ -13,6 +13,13 @@ Rode os testes
 
     npm run test:watch
 
+Se você quiser programar enquanto assiste a aula, baixe esse
+[template inicial](https://github.com/yudi-azvd/tdd-typescript/tree/initial-template):
+
+    git clone -b initial-template https://github.com/yudi-azvd/tdd-typescript.git
+
+E comece a programar.
+
 ## Casos de uso
 
 Dados: id do Grupo
