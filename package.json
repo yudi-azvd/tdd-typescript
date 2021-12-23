@@ -4,7 +4,7 @@
   "description": "[Vídeo aula](https://www.youtube.com/watch?v=sg1zFpNM5Jw&t=3398s) da  Rocketseat + Rodrigo Manguinho",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npx jest",
     "test:watch": "npx jest --watch --runInBand"
   },
   "keywords": [],

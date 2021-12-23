@@ -1,12 +1,10 @@
 {
   "compilerOptions": {
+    "sourceMap": true,
     "strict": true,
     "esModuleInterop": true,
     "baseUrl": "src",
     "rootDir": "src",
-    "paths": {
-      "@/*": ["*"]
-    }
   },
   "include": ["src"],
   "exclude": ["**/node_modules/**"]

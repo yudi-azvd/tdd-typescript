@@ -1,36 +1,7 @@
 import { set, reset } from 'mockdate'
 
-class EventStatus {
-  status: 'active' | 'inReview' | 'done'
-
-  constructor(event?: { endDate: Date, reviewDurationInHours: number }) {
-    if (event === undefined) {
-      this.status = 'done'
-      return
-    }
-
-    const now = new Date()
-    if (event.endDate >= now) {
-      this.status = 'active'
-      return
-    }
-
-    const reviewDurationInMilliseconds = event.reviewDurationInHours * 60 * 60 * 1000
-    const reviewDate = new Date(event.endDate.getTime() + reviewDurationInMilliseconds)
-    this.status = reviewDate >= now ? 'inReview'  :  'done'
-  }
-}
-
-class CheckLastEventStatus {
-  constructor(
-    private readonly loadLastRepository: LoadLastEventRepository
-  ) { }
-
-  async perform({groupId}:{ groupId: string}): Promise<EventStatus> {
-    const event = await this.loadLastRepository.loadLastEvent({groupId})
-    return new EventStatus(event)
-  }
-}
+import CheckLastEventStatus from '../src/CheckLastEventStatus'
+import LoadLastEventRepository from '../src/LoadLastEventRepository'
 
 type SutOutput = {
   sut: CheckLastEventStatus
@@ -41,10 +12,6 @@ const makeSut = (): SutOutput => {
   const loadLastEventRepository = new LoadLastEventRepositorySpy()
   const sut = new CheckLastEventStatus(loadLastEventRepository)
   return {sut, loadLastEventRepository}
-}
-
-interface LoadLastEventRepository  {
-  loadLastEvent(input: { groupId: string }): Promise<{ endDate: Date, reviewDurationInHours: number } | undefined>
 }
 
 class LoadLastEventRepositorySpy implements LoadLastEventRepository {
