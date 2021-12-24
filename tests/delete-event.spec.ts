@@ -3,22 +3,36 @@ class DeleteEvent {
     private readonly loadGroupRepository: LoadGroupRepository
   ) { }
 
-  async perform({ id }: { id: string, userId: string }): Promise<void> {
+  async perform({ id, userId }: { id: string, userId: string }): Promise<void> {
     const group = await this.loadGroupRepository.load({ eventId: id })
-    if (group === undefined) throw new Error()
+    if (group === undefined)
+      throw new Error()
+    if (group.users.find(user => user.id === userId) === undefined)
+      throw new Error()
   }
+}
+
+type GroupUser = {
+  id: string
+  permission: string
+}
+
+type Group = {
+  users: GroupUser[]
 }
 
 interface LoadGroupRepository {
   eventId?: string
-  load(input: { eventId: string }): Promise<any>
+  load(input: { eventId: string }): Promise<Group | undefined>
 }
 
 class LoadGroupRepositoryMock implements LoadGroupRepository {
   eventId?: string
-  output: any = 'any_value'
+  output?: Group = {
+    users: [{ id: 'any_user_id', permission: 'any' }]
+  }
 
-  async load({ eventId }: { eventId: string }): Promise<any> {
+  async load({ eventId }: { eventId: string }): Promise<Group | undefined> {
     this.eventId = eventId
     return this.output
   }
@@ -53,6 +67,17 @@ describe('DeleteEvent', () => {
 
     const promise = sut.perform({ id, userId })
 
-    expect(promise).rejects.toThrowError()
+    await expect(promise).rejects.toThrowError()
+  })
+
+  it('should throw exception if eventId is invalid', async () => {
+    const { sut, loadGroupRepository } = makeSut()
+    loadGroupRepository.output = {
+      users: [{ id: 'any_user_id', permission: 'any' }]
+    }
+
+    const promise = sut.perform({ id, userId: 'invalid-id' })
+
+    await expect(promise).rejects.toThrowError()
   })
 })
