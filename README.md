@@ -3,7 +3,8 @@
 [Vídeo aula](https://www.youtube.com/watch?v=sg1zFpNM5Jw) da
 Rocketseat + Rodrigo Manguinho
 
-[Outra aula](https://www.youtube.com/watch?v=_ljM7uTI4g8) com Otavio Lemos.
+[Outra aula](https://www.youtube.com/watch?v=_ljM7uTI4g8) com Otavio Lemos (parei
+de programar lá pra 1h27min quando ele começou a mudar a estrutura do projeto).
 
 ## Como rodar
 

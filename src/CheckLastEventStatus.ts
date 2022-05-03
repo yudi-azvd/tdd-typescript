@@ -6,8 +6,8 @@ export default class CheckLastEventStatus {
     private readonly loadLastRepository: LoadLastEventRepository
   ) { }
 
-  async perform({groupId}:{ groupId: string}): Promise<EventStatus> {
-    const event = await this.loadLastRepository.loadLastEvent({groupId})
+  async perform({ groupId }: { groupId: string }): Promise<EventStatus> {
+    const event = await this.loadLastRepository.loadLastEvent({ groupId })
 
     return new EventStatus(event)
   }

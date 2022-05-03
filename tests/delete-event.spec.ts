@@ -1,3 +1,5 @@
+import { Group } from "@/domain/models"
+
 class DeleteEvent {
   constructor(
     private readonly loadGroupRepository: LoadGroupRepository,
@@ -19,14 +21,6 @@ class DeleteEvent {
   }
 }
 
-type GroupUser = {
-  id: string
-  permission: 'owner' | 'admin' | 'user'
-}
-
-type Group = {
-  users: GroupUser[]
-}
 
 interface LoadGroupRepository {
   eventId?: string
